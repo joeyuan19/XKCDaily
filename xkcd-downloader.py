@@ -1,9 +1,16 @@
 from BeautifulSoup import BeautifulSoup as bs
 from urllib2 import urlopen
 from urllib import urlretrieve
+from PIL import Image
 import os
 import sys
 import ctypes
+
+
+# To Do
+#   [ ] Add alt-text
+#   [ ] Multiplatformness
+
 
 def time_now():
 	import datetime
@@ -28,18 +35,24 @@ RENAME = "current.bmp"
 PWD = os.path.dirname(os.path.realpath(__file__)) 
 
 try:
-	soup = bs(urlopen(URL))
+    # Check if the dump directory exists
+    if not os.path.exists(join(PWD,DIR)):
+        os.makedirs(join(PWD,DIR))
+    
+    # Pull img
+    soup = bs(urlopen(URL))
 	soup = bs(str(soup.find("div",{"id":"comic"})))
 	src = soup.find("img")["src"]
 	img_name = src[src.rfind("/")+1:]
 	img_loc = join(PWD,DIR,img_name)
 	urlretrieve(src,img_loc)
 
-	from PIL import Image
+	# convert image to bmp
 	img = Image.open(img_loc)
 	img.save(join(PWD,DIR,RENAME))
-
-	ctypes.windll.user32.SystemParametersInfoA(20, 0, r"C:\Users\Joe\Desktop\Projects\xkcd-auto-download\pics\current.bmp", 0)	
+    
+    # Windows - set to BG
+	ctypes.windll.user32.SystemParametersInfoA(20, 0, join(PWD,DIR,RENAME), 0)	
 except Exception as e:
 	write_log(e)
 
