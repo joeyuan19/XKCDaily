@@ -9,6 +9,5 @@ Set up to run script as a scheduled task.
 
 
 ###To Do
- -  [ ] Include Alt-text
+ -  [x] Include Alt-text
  -  [ ] Cross-Platform Handling (<del>Windows</del>, Mac, *nix)
- 
